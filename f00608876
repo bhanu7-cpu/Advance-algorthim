@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+// Function to find the longest common substring
+pair<string, vector<vector<int>>> longestCommonSubstring(const string& str1, const string& str2) {
+    int n = str1.length();
+    vector<vector<int>> table(n + 1, vector<int>(n + 1, 0));
+    int maxLength = 0;
+    int endPos = 0;
+
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            if (str1[i - 1] == str2[j - 1]) {
+                table[i][j] = table[i - 1][j - 1] + 1;
+                if (table[i][j] > maxLength) {
+                    maxLength = table[i][j];
+                    endPos = i;
+                }
+            } else {
+                table[i][j] = 0;
+            }
+        }
+    }
+
+    string longestSubstr = str1.substr(endPos - maxLength, maxLength);
+    return {longestSubstr, table};
+}
+
+int main() {
+    string str1 = "ABABC";
+    string str2 = "BABCA";
+
+    auto result = longestCommonSubstring(str1, str2);
+    string longestSubstr = result.first;
+    vector<vector<int>> table = result.second;
+
+    cout << "Longest Common Substring: " << longestSubstr << endl;
+    cout << "Length: " << longestSubstr.length() << endl;
+    cout << "2D Table:" << endl;
+    for (const auto& row : table) {
+        for (int val : row) {
+            cout << val << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
